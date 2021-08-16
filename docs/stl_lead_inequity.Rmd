@@ -1,0 +1,41 @@
+---
+title: "stl_lead_practice"
+author: "Connor Flynn"
+date: "8/15/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(janitor)
+library(skimr)
+```
+
+```{r}
+stl_lead <- read_csv(here("data", "stl_blood_lead (1).csv"))
+```
+
+```{r}
+clean_names(stl_lead)
+```
+
+```{r}
+stl_lead_1 <- read_delim(here::here("data", "stl_blood_lead (1).csv"), delim = ";") %>% 
+  mutate(pctElevated = str_replace(pctElevated, pattern = ",", replacement = ".")) %>% 
+  mutate(pctElevated = as.numeric(pctElevated))
+```
+
+```{r}
+stl_lead_prop <- stl_lead_1 %>% mutate(prop_white = white / totalPop * 100)
+
+```
+
+```{r}
+white_elevated_plot <- ggplot(data = stl_lead_prop, aes(x= pctElevated, y = prop_white)) +
+  geom_point()
+
+white_elevated_plot
+```
+
